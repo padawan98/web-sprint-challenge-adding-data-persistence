@@ -4,14 +4,30 @@ const db = require('../../data/dbConfig');
 function getTasks ()
 {
     return db('tasks as t')
-        .leftJoin('project as p', 'p.project_name', 'p.project_description')
-        .select('t.task_id', 't.task_description', 't.task_notes', 't.task_completed');
+        .leftJoin('projects as p', 'p.project_id', 't.project_id')
+        .select('t.task_id', 't.task_description', 't.task_notes', 't.task_completed', 'p.project_description', 'p.project_name')
+        .then(data =>{
+            return data.map(taskData=>{
+                return{
+                    ...taskData,
+                    task_completed: taskData.task_completed ? true:false
+                }
+            })
+        })
 }
 
 async function postTasks(tasks) 
 {
-    const [project_id] = await db('tasks').insert(tasks);
-    return getTasks().where({project_id}).first();
+    const [task_id] = await db('tasks').insert(tasks);
+    return getTasks().where({task_id}).first()
+    .then(data =>{
+        return data.map(taskData=>{
+            return{
+                ...taskData,
+                task_completed: taskData.task_completed ? true:false
+            }
+        })
+    })
 }
 
 // [ ] `[POST] /api/tasks`

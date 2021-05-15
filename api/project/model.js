@@ -4,12 +4,28 @@ const db = require('../../data/dbConfig');
 function getProjects ()
 {
     return db('projects as p')
-        .select('p.project_id', 'p.project_name', 'p.project_description', 'p.project_completed');
+        .select('p.project_id', 'p.project_name', 'p.project_description', 'p.project_completed')
+        .then(data =>{
+            return data.map(projectData=>{
+                return{
+                    ...projectData,
+                    project_completed: projectData.project_completed ? true:false
+                }
+            })
+        })
 }
 
 async function postProjects(projects) {
     const [project_id] = await db('projects').insert(projects);
-    return getProjects().where({project_id}).first();
+    return getProjects().where({project_id}).first()
+    .then(data =>{
+        return data.map(projectData=>{
+            return{
+                ...projectData,
+                project_completed: projectData.project_completed ? true:false
+            }
+        })
+    })
 }
 
 

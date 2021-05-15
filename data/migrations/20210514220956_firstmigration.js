@@ -16,7 +16,7 @@ exports.up = async function(knex) {
         tbl.increments('task_id')
         tbl.string('task_description').notNullable()
         tbl.string('task_notes')
-        tbl.bool('project_completed')
+        tbl.bool('task_completed')
         tbl.integer('project_id')
         .notNullable()
         .references('project_id')
@@ -28,7 +28,7 @@ exports.up = async function(knex) {
 
 exports.down = async function(knex) {
     await knex.schema
-        .dropTableIfExists('projects')
         .dropTableIfExists('tasks')
         .dropTableIfExists('resources')
+        .dropTableIfExists('projects')
 };

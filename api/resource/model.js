@@ -15,8 +15,8 @@ function getResources ()
 //POST
 async function postResources (rss) 
 {
-    const [rss_id] = await db('resources').insert(rss);
-    return getResources().where({rss_id}).first();
+    const [resource_id] = await db('resources').insert(rss);
+    return getResources().where({resource_id}).first();
 }
 
 // - Example of response body: 
